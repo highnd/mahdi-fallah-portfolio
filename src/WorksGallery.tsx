@@ -246,8 +246,8 @@ export default function WorksGallery({
           inset: 0;
           width: 100%;
           height: 100%;
-          height: 100svh;
-          height: 100dvh;
+          height: 100lvh;
+          min-height: 100dvh;
           min-height: -webkit-fill-available;
           overflow: hidden;
           background: var(--wg-bg);
@@ -294,8 +294,8 @@ export default function WorksGallery({
           grid-template-columns: 22% 1fr 110px;
           grid-template-rows: 1fr;
           height: 100%;
-          height: 100svh;
-          height: 100dvh;
+          height: 100lvh;
+          min-height: 100dvh;
           min-height: -webkit-fill-available;
           width: 100%;
           max-width: 100%;

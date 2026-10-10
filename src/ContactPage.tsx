@@ -100,8 +100,8 @@ export default function ContactPage() {
           inset: 0;
           width: 100%;
           height: 100%;
-          height: 100svh;
-          height: 100dvh;
+          height: 100lvh;
+          min-height: 100dvh;
           min-height: -webkit-fill-available;
           overflow: hidden;
           background: var(--ct-bg);
@@ -137,8 +137,8 @@ export default function ContactPage() {
           display: grid;
           grid-template-columns: 1.05fr 0.95fr;
           height: 100%;
-          height: 100svh;
-          height: 100dvh;
+          height: 100lvh;
+          min-height: 100dvh;
           min-height: -webkit-fill-available;
           width: 100%;
           padding-top: 72px;

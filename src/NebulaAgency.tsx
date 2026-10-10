@@ -1318,8 +1318,11 @@ export default function NebulaAgency() {
 
     // ── sizing ────────────────────────────────────────────────────────────
     function resize() {
-      const w = stage!.clientWidth || window.innerWidth;
-      const h = stage!.clientHeight || window.innerHeight;
+      const vv = window.visualViewport;
+      const w = Math.max(stage!.clientWidth || 0, vv?.width ?? 0, window.innerWidth) || window.innerWidth;
+      // Prefer the larger height so canvas never underfills while mobile chrome collapses.
+      const h =
+        Math.max(stage!.clientHeight || 0, vv?.height ?? 0, window.innerHeight) || window.innerHeight;
       renderer.setSize(w, h, false);
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
@@ -1333,15 +1336,18 @@ export default function NebulaAgency() {
     resize();
 
     let resizePending = false;
-    const ro = new ResizeObserver(() => {
+    const scheduleResize = () => {
       if (resizePending) return;
       resizePending = true;
       requestAnimationFrame(() => {
         resizePending = false;
         resize();
       });
-    });
+    };
+    const ro = new ResizeObserver(scheduleResize);
     ro.observe(stage);
+    window.visualViewport?.addEventListener("resize", scheduleResize);
+    window.visualViewport?.addEventListener("scroll", scheduleResize);
 
     // ── overlay refs ──────────────────────────────────────────────────────
     secEls = Array.from(stage.querySelectorAll<HTMLElement>(".neb-sec"));
@@ -1485,10 +1491,12 @@ export default function NebulaAgency() {
       renderer.render(scene, camera);
       return () => {
         if (hoverEnabled) {
-        window.removeEventListener("pointermove", onPointer);
-        document.removeEventListener("pointerleave", onLeave);
-      }
+          window.removeEventListener("pointermove", onPointer);
+          document.removeEventListener("pointerleave", onLeave);
+        }
         ro.disconnect();
+        window.visualViewport?.removeEventListener("resize", scheduleResize);
+        window.visualViewport?.removeEventListener("scroll", scheduleResize);
         geo.dispose();
         material.dispose();
         renderer.dispose();
@@ -1550,6 +1558,8 @@ export default function NebulaAgency() {
         document.removeEventListener("pointerleave", onLeave);
       }
       ro.disconnect();
+      window.visualViewport?.removeEventListener("resize", scheduleResize);
+      window.visualViewport?.removeEventListener("scroll", scheduleResize);
       geo.dispose();
       material.dispose();
       renderer.dispose();
@@ -1563,11 +1573,11 @@ export default function NebulaAgency() {
         .neb-root { position: relative; width: 100%; background: #171717; }
         .neb-stage {
           position: fixed; inset: 0; width: 100%; overflow: hidden; z-index: 0;
-          /* dvh tracks mobile chrome show/hide; svh/fill-available avoid bottom gap */
+          /* lvh = chrome-hidden height so stage never short-flashes when URL bar collapses */
           height: 100%;
-          height: 100svh;
-          height: 100dvh;
+          height: 100lvh;
           min-height: 100%;
+          min-height: 100dvh;
           min-height: -webkit-fill-available;
           background:
             radial-gradient(120% 130% at 70% 30%, #004741 0%, #1a2422 40%, #171717 100%);
