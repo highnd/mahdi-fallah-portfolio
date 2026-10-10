@@ -99,7 +99,10 @@ export default function ContactPage() {
           position: fixed;
           inset: 0;
           width: 100%;
+          height: 100%;
           height: 100svh;
+          height: 100dvh;
+          min-height: -webkit-fill-available;
           overflow: hidden;
           background: var(--ct-bg);
           color: #e8fff8;
@@ -133,7 +136,10 @@ export default function ContactPage() {
           z-index: 2;
           display: grid;
           grid-template-columns: 1.05fr 0.95fr;
+          height: 100%;
           height: 100svh;
+          height: 100dvh;
+          min-height: -webkit-fill-available;
           width: 100%;
           padding-top: 72px;
           box-sizing: border-box;

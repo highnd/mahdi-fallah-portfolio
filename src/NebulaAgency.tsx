@@ -1562,7 +1562,13 @@ export default function NebulaAgency() {
       <style>{`
         .neb-root { position: relative; width: 100%; background: #171717; }
         .neb-stage {
-          position: fixed; inset: 0; height: 100svh; width: 100%; overflow: hidden; z-index: 0;
+          position: fixed; inset: 0; width: 100%; overflow: hidden; z-index: 0;
+          /* dvh tracks mobile chrome show/hide; svh/fill-available avoid bottom gap */
+          height: 100%;
+          height: 100svh;
+          height: 100dvh;
+          min-height: 100%;
+          min-height: -webkit-fill-available;
           background:
             radial-gradient(120% 130% at 70% 30%, #004741 0%, #1a2422 40%, #171717 100%);
           font-family: "Vazirmatn", "Sora", system-ui, sans-serif; color: #e8fff8;

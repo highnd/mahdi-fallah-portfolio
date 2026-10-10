@@ -245,7 +245,10 @@ export default function WorksGallery({
           position: fixed;
           inset: 0;
           width: 100%;
+          height: 100%;
           height: 100svh;
+          height: 100dvh;
+          min-height: -webkit-fill-available;
           overflow: hidden;
           background: var(--wg-bg);
           color: #e8fff8;
@@ -290,7 +293,10 @@ export default function WorksGallery({
           display: grid;
           grid-template-columns: 22% 1fr 110px;
           grid-template-rows: 1fr;
+          height: 100%;
           height: 100svh;
+          height: 100dvh;
+          min-height: -webkit-fill-available;
           width: 100%;
           max-width: 100%;
           overflow: hidden;

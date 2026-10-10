@@ -1,10 +1,20 @@
 /* Minimal reset so the full-bleed particle site fills the window. The
    component injects all of its own styling — nothing else is needed here. */
+html {
+  height: 100%;
+  height: -webkit-fill-available;
+}
+
 html,
 body,
 #root {
   margin: 0;
   padding: 0;
+  min-height: 100%;
+  min-height: 100svh;
+  min-height: 100dvh;
+  min-height: -webkit-fill-available;
+  background: #171717;
 }
 
 body {
