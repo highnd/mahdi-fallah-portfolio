@@ -1,0 +1,28 @@
+node_modules
+dist
+dist-ssr
+*.local
+
+# Env / secrets
+.env
+.env.*
+!.env.example
+
+# Editor / OS
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Local audits / screenshots
+scripts/home-*.png
+scripts/morph-*.png
+scripts/audit-*.png
+scripts/ex-*.png
+scripts/*-report.json
+scripts/audit-timeline-*.png

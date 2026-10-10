@@ -1,0 +1,19 @@
+{
+  "name": "مهدی فلاح — مهندس فول‌استک",
+  "short_name": "مهدی فلاح",
+  "description": "نمونه‌کار مهدی فلاح — فول‌استک، طراحی سیستم و WebGL",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#171717",
+  "theme_color": "#171717",
+  "lang": "fa",
+  "dir": "rtl",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

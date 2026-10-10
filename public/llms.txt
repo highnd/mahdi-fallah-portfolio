@@ -1,0 +1,33 @@
+﻿# Mahdi Fallah (مهدی فلاح)
+
+> Full-stack software engineer & PhD candidate in Computer Engineering.
+> Builds product-grade web apps, scalable backends, and immersive WebGL interfaces.
+
+- Name (FA): مهدی فلاح
+- Name (EN): Mahdi Fallah
+- Role: Full-stack Software Engineer
+- Experience: 6+ years
+- Email: highnd32@gmail.com
+- Phone: +98 992 402 1299
+- GitHub: https://github.com/highnd
+- Site: https://mahdifallahkordi.ir
+
+## Skills
+- Frontend: React, TypeScript, Next.js, design systems, motion
+- Backend: Node.js, NestJS, APIs, auth, databases
+- Systems: system design, scalable architecture
+- Creative tech: WebGL, Three.js, immersive web
+
+## Key pages
+- Home: https://mahdifallahkordi.ir/
+- Works: https://mahdifallahkordi.ir/works
+- Experience: https://mahdifallahkordi.ir/experience
+- Contact: https://mahdifallahkordi.ir/contact
+
+## Notable projects
+- EasyCodePie — https://easycodepie.ir
+- Sol (restaurant SaaS) — https://sol.ir
+- Saba Broodat Pars — https://sababroodat.com
+
+## Contact for collaboration
+Email highnd32@gmail.com or use https://mahdifallahkordi.ir/contact

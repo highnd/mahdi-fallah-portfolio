@@ -1,0 +1,155 @@
+/* Minimal reset so the full-bleed particle site fills the window. The
+   component injects all of its own styling — nothing else is needed here. */
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: #171717;
+}
+
+/* Crawlable SEO entity block — clipped, not display:none */
+.seo-static {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+  pointer-events: none;
+}
+
+/* Brand scrollbar (entire project) */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: #21f1a8 rgba(0, 71, 65, 0.55);
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+*::-webkit-scrollbar-track {
+  background: rgba(0, 71, 65, 0.45);
+  border-radius: 999px;
+}
+*::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #6ff7c4 0%, #21f1a8 45%, #004741 100%);
+  border-radius: 999px;
+  border: 2px solid rgba(23, 23, 23, 0.55);
+  background-clip: padding-box;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: #6ff7c4;
+  border: 2px solid rgba(23, 23, 23, 0.35);
+  background-clip: padding-box;
+}
+*::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Shared site nav (homepage style on every page) */
+.site-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 28px clamp(48px, 8vw, 120px);
+  pointer-events: none;
+  box-sizing: border-box;
+  font-family: "Vazirmatn", "Sora", system-ui, sans-serif;
+  background: transparent;
+  border-bottom: 1px solid transparent;
+  transition:
+    background 0.35s ease,
+    border-color 0.35s ease,
+    padding 0.35s ease,
+    backdrop-filter 0.35s ease,
+    -webkit-backdrop-filter 0.35s ease;
+}
+.site-nav--scrolled {
+  background: rgba(12, 18, 17, 0.62);
+  border-bottom-color: rgba(232, 255, 248, 0.1);
+  backdrop-filter: blur(18px) saturate(1.25);
+  -webkit-backdrop-filter: blur(18px) saturate(1.25);
+  padding-top: 18px;
+  padding-bottom: 18px;
+}
+.site-nav-logo {
+  position: relative;
+  z-index: 1;
+  font-family: "Sora", "Vazirmatn", sans-serif;
+  font-weight: 800;
+  font-size: 22px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #e8fff8;
+  text-decoration: none;
+  pointer-events: auto;
+  direction: ltr;
+}
+.site-nav-logo span {
+  color: #21f1a8;
+}
+.site-nav-links {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: clamp(28px, 3.5vw, 48px);
+  pointer-events: auto;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+.site-nav-links a {
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: none;
+  color: #b8d4cc;
+  text-decoration: none;
+  opacity: 0.9;
+  transition: opacity 0.25s ease, color 0.25s ease;
+  white-space: nowrap;
+}
+.site-nav-links a:hover,
+.site-nav-links a.site-nav-active {
+  opacity: 1;
+  color: #21f1a8;
+}
+.site-nav-links a:focus-visible {
+  outline: 2px solid #21f1a8;
+  outline-offset: 4px;
+}
+
+@media (max-width: 860px) {
+  .site-nav {
+    padding: 18px clamp(20px, 5vw, 32px);
+  }
+  .site-nav-logo {
+    font-size: 18px;
+  }
+  .site-nav-links {
+    position: static;
+    left: auto;
+    transform: none;
+    gap: 12px;
+    justify-content: flex-end;
+    max-width: min(72vw, 320px);
+  }
+  .site-nav-links a {
+    font-size: 12px;
+  }
+}
