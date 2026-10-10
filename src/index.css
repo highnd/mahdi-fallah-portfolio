@@ -79,6 +79,8 @@ html {
   pointer-events: none;
   box-sizing: border-box;
   font-family: "Vazirmatn", "Sora", system-ui, sans-serif;
+  /* Lock RTL so LTR pages (e.g. Works) don't reverse logo/link order */
+  direction: rtl;
   background: transparent;
   border-bottom: 1px solid transparent;
   transition:
@@ -122,6 +124,7 @@ html {
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
+  direction: rtl;
 }
 .site-nav-links a {
   font-size: 15px;

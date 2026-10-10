@@ -38,6 +38,7 @@ export default function SiteNav() {
     <header
       className={`site-nav${!isHome && scrolled ? " site-nav--scrolled" : ""}`}
       lang="fa"
+      dir="rtl"
     >
       <Link to="/" className="site-nav-logo">
         Mahdi<span>.</span>
