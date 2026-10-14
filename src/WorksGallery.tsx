@@ -7,12 +7,12 @@ import {
   KEXSIO_BG,
 } from "./worksData";
 import SiteNav from "./SiteNav";
+import { useLocale } from "./i18n/LocaleContext";
+import { lx } from "./i18n/localize";
 
 export type WorksGalleryProps = {
   projects?: GalleryProject[];
   brandName?: string;
-  brandLabel?: string;
-  brandIntro?: string;
   accentColor?: string;
   className?: string;
 };
@@ -27,12 +27,10 @@ function padIndex(i: number): string {
 export default function WorksGallery({
   projects = DEFAULT_PROJECTS,
   brandName = "Mahdi",
-  brandLabel = "Full-stack Developer",
-  brandIntro =
-    "Mahdi Fallah — 6 years building creative full-stack products, immersive interfaces, and solid NestJS backends.",
   accentColor = KEXSIO_ACCENT,
   className = "",
 }: WorksGalleryProps) {
+  const { locale, t } = useLocale();
   const [activeIndex, setActiveIndex] = useState(0);
   const [displayIndex, setDisplayIndex] = useState(0);
   const [bgFrontIndex, setBgFrontIndex] = useState(0);
@@ -181,7 +179,7 @@ export default function WorksGallery({
         setDisplayIndex(nextIndex);
         if (img) {
           img.src = nextProject.image;
-          img.alt = `${nextProject.title} — ${nextProject.category}`;
+          img.alt = `${nextProject.title} — ${lx(locale, nextProject.category)}`;
         }
         gsap.set(texts, { y: 36, opacity: 0 });
         if (imgWrap) gsap.set(imgWrap, { y: 48, scale: 0.7, opacity: 0 });
@@ -207,7 +205,7 @@ export default function WorksGallery({
 
       scrollThumbIntoView(nextIndex);
     },
-    [activeIndex, projects, textEls, total, scrollThumbIntoView],
+    [activeIndex, projects, textEls, total, scrollThumbIntoView, locale],
   );
 
   const goNext = useCallback(() => goTo(activeIndex + 1), [activeIndex, goTo]);
@@ -698,27 +696,31 @@ export default function WorksGallery({
           <div className="wg-brand-block">
             <div className="wg-accent-line" />
             <h1 className="wg-brand">{brandName}</h1>
-            <p className="wg-brand-label">{brandLabel}</p>
+            <p className="wg-brand-label">{t.works.brandLabel}</p>
           </div>
-          <p className="wg-intro">{brandIntro}</p>
+          <p className="wg-intro">{t.works.brandIntro}</p>
         </aside>
 
-        <main className="wg-main" aria-label="Creative project gallery">
+        <main className="wg-main" aria-label={t.works.galleryAria}>
           <div className="wg-info">
-            <p ref={categoryRef} className="wg-category">{project.category}</p>
+            <p ref={categoryRef} className="wg-category">
+              {lx(locale, project.category)}
+            </p>
             <p ref={counterRef} className="wg-counter">
               {padIndex(activeIndex)} / {String(total).padStart(2, "0")}
             </p>
             <h2 ref={titleRef} className="wg-title">{project.title}</h2>
-            <p ref={descRef} className="wg-desc">{project.description}</p>
+            <p ref={descRef} className="wg-desc">
+              {lx(locale, project.description)}
+            </p>
             <div ref={dividerRef} className="wg-divider" />
             <div ref={creditsRef} className="wg-credits">
               <div>
-                <p className="wg-credit-label">Role</p>
-                <p className="wg-credit-name">{project.creativeLead}</p>
+                <p className="wg-credit-label">{t.works.role}</p>
+                <p className="wg-credit-name">{lx(locale, project.creativeLead)}</p>
               </div>
               <div>
-                <p className="wg-credit-label">Stack</p>
+                <p className="wg-credit-label">{t.works.stack}</p>
                 <p className="wg-credit-name">{project.visualArtist}</p>
               </div>
             </div>
@@ -730,7 +732,7 @@ export default function WorksGallery({
               className="wg-arrow"
               onClick={goPrev}
               disabled={activeIndex === 0 || isTransitioning}
-              aria-label="Previous project"
+              aria-label={t.works.prev}
             >
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                 <path d="M15 18l-6-6 6-6" />
@@ -752,17 +754,17 @@ export default function WorksGallery({
                 ref={imageRef}
                 className="wg-image"
                 src={project.image}
-                alt={`${project.title} — ${project.category}`}
+                alt={`${project.title} — ${lx(locale, project.category)}`}
                 draggable={false}
                 loading={activeIndex < PRELOAD_COUNT ? "eager" : "lazy"}
               />
               <div className="wg-image-grad-top" />
               <div className="wg-image-grad-bottom" />
               <div className="wg-image-meta">
-                <span className="wg-story-label">Live Project</span>
+                <span className="wg-story-label">{t.works.liveProject}</span>
                 <span className="wg-year">{CURRENT_YEAR}</span>
                 <span className="wg-explore">
-                  Visit Site
+                  {t.works.visitSite}
                   <span className="wg-explore-icon" aria-hidden="true">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                       <path d="M7 17L17 7M17 7H9M17 7v8" />
@@ -777,7 +779,7 @@ export default function WorksGallery({
               className="wg-arrow"
               onClick={goNext}
               disabled={activeIndex >= total - 1 || isTransitioning}
-              aria-label="Next project"
+              aria-label={t.works.next}
             >
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                 <path d="M9 18l6-6-6-6" />
@@ -790,7 +792,7 @@ export default function WorksGallery({
           ref={thumbRailRef}
           className="wg-rail"
           role="tablist"
-          aria-label="Project thumbnails"
+          aria-label={t.works.thumbsAria}
         >
           {projects.map((p, i) => (
             <button

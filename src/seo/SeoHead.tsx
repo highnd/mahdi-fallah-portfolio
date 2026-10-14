@@ -1,10 +1,12 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import { useLocale } from "../i18n/LocaleContext";
 import {
   DEFAULT_OG_IMAGE,
   SITE_LOCALE,
   SITE_LOCALE_ALT,
   SITE_NAME,
+  SITE_NAME_EN,
   SITE_URL,
   THEME_COLOR,
   absoluteUrl,
@@ -61,29 +63,33 @@ function upsertJsonLd(id: string, data: unknown) {
 /** Syncs document head (title, meta, canonical, JSON-LD) to the active route. */
 export default function SeoHead() {
   const { pathname } = useLocation();
+  const { locale } = useLocale();
 
   useEffect(() => {
-    const seo = getRouteSeo(pathname);
+    const seo = getRouteSeo(pathname, locale);
     const url = absoluteUrl(seo.path);
+    const siteName = locale === "fa" ? SITE_NAME : SITE_NAME_EN;
+    const primaryLocale = locale === "fa" ? SITE_LOCALE : SITE_LOCALE_ALT;
+    const altLocale = locale === "fa" ? SITE_LOCALE_ALT : SITE_LOCALE;
 
     document.title = seo.title;
-    document.documentElement.lang = "fa";
+    document.documentElement.lang = locale;
 
     upsertMeta("name", "description", seo.description);
-    upsertMeta("name", "author", SITE_NAME);
+    upsertMeta("name", "author", siteName);
     upsertMeta("name", "theme-color", THEME_COLOR);
     upsertMeta("name", "robots", "index,follow,max-image-preview:large");
     upsertMeta("name", "googlebot", "index,follow,max-image-preview:large");
 
     upsertMeta("property", "og:type", seo.ogType || "website");
-    upsertMeta("property", "og:site_name", SITE_NAME);
-    upsertMeta("property", "og:locale", SITE_LOCALE);
-    upsertMeta("property", "og:locale:alternate", SITE_LOCALE_ALT);
+    upsertMeta("property", "og:site_name", siteName);
+    upsertMeta("property", "og:locale", primaryLocale);
+    upsertMeta("property", "og:locale:alternate", altLocale);
     upsertMeta("property", "og:title", seo.title);
     upsertMeta("property", "og:description", seo.description);
     upsertMeta("property", "og:url", url);
     upsertMeta("property", "og:image", DEFAULT_OG_IMAGE);
-    upsertMeta("property", "og:image:alt", `${SITE_NAME} — Full-stack Engineer`);
+    upsertMeta("property", "og:image:alt", `${SITE_NAME_EN} — Full-stack Engineer`);
 
     upsertMeta("name", "twitter:card", "summary_large_image");
     upsertMeta("name", "twitter:title", seo.title);
@@ -92,10 +98,11 @@ export default function SeoHead() {
 
     upsertLink("canonical", url);
     upsertLink("alternate", url, { hrefLang: "fa" });
+    upsertLink("alternate", url, { hrefLang: "en" });
     upsertLink("alternate", url, { hrefLang: "x-default" });
 
     upsertJsonLd("seo-jsonld", buildGraphJsonLd(pathname));
-  }, [pathname]);
+  }, [pathname, locale]);
 
   return null;
 }

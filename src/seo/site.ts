@@ -76,6 +76,37 @@ export const ROUTE_SEO: Record<string, RouteSeo> = {
   },
 };
 
+export const ROUTE_SEO_EN: Record<string, RouteSeo> = {
+  "/": {
+    path: "/",
+    title: "Mahdi Fallah — Full-stack & WebGL Engineer",
+    description:
+      "Portfolio of Mahdi Fallah — full-stack engineer with 6 years of experience, PhD candidate in Computer Engineering. React, Node, system design, and immersive Three.js interfaces.",
+    ogType: "profile",
+  },
+  "/works": {
+    path: "/works",
+    title: "Works — Mahdi Fallah",
+    description:
+      "Product work by Mahdi Fallah: EasyCodePie, Sol, Saba Broodat Pars, and creative templates with Next.js, NestJS, and WebGL.",
+    ogType: "website",
+  },
+  "/experience": {
+    path: "/experience",
+    title: "Experience — Mahdi Fallah",
+    description:
+      "Career path: founder of EasyCodePie, Senior at Sol (onsite), OsloWeb Norway, Taftaco, and Saba Broodat Pars.",
+    ogType: "website",
+  },
+  "/contact": {
+    path: "/contact",
+    title: "Contact Mahdi Fallah — Full-stack collaboration",
+    description:
+      "Get in touch for serious product work. Email highnd32@gmail.com · Phone 0992 402 1299 · GitHub highnd.",
+    ogType: "website",
+  },
+};
+
 export const FAQ_ITEMS = [
   {
     q: "مهدی فلاح چه تخصصی دارد؟",
@@ -83,7 +114,7 @@ export const FAQ_ITEMS = [
   },
   {
     q: "چطور می‌توان برای پروژه همکاری کرد؟",
-    a: "از صفحه تماس درخواست پروژه بفرستید یا مستقیم به highnd32@gmail.com ایمیل بزنید / با 0992 402 1299 تماس بگیرید.",
+    a: "از صفحه تماس ایمیل، تلفن یا گیت‌هاب را ببینید — مستقیم به highnd32@gmail.com ایمیل بزنید یا با 0992 402 1299 تماس بگیرید.",
   },
   {
     q: "چه نوع پروژه‌هایی در نمونه‌کارها دیده می‌شود؟",
@@ -100,8 +131,9 @@ export function absoluteUrl(path: string): string {
   return `${SITE_URL}${path.startsWith("/") ? path : `/${path}`}`;
 }
 
-export function getRouteSeo(pathname: string): RouteSeo {
-  return ROUTE_SEO[pathname] ?? ROUTE_SEO["/"];
+export function getRouteSeo(pathname: string, locale: "fa" | "en" = "fa"): RouteSeo {
+  const table = locale === "en" ? ROUTE_SEO_EN : ROUTE_SEO;
+  return table[pathname] ?? table["/"];
 }
 
 export function buildPersonJsonLd() {

@@ -16,14 +16,10 @@ import {
   WORK_PLACES,
   type WorkPlace,
 } from "./worksData";
+import { useLocale } from "./i18n/LocaleContext";
+import { lx } from "./i18n/localize";
 
 gsap.registerPlugin(ScrollTrigger);
-
-const MODE_LABEL: Record<WorkPlace["mode"], string> = {
-  onsite: "حضوری",
-  remote: "ریموت",
-  hybrid: "هیبرید",
-};
 
 function pad(i: number) {
   return String(i + 1).padStart(2, "0");
@@ -152,6 +148,7 @@ function useHeroAtmosphere(
 }
 
 export default function ExperiencePage() {
+  const { locale, dir, t } = useLocale();
   const rootRef = useRef<HTMLDivElement>(null);
   const pinRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
@@ -163,9 +160,19 @@ export default function ExperiencePage() {
   const jobs = WORK_PLACES;
   const job = jobs[active] ?? jobs[0];
 
+  const modeLabel = (mode: WorkPlace["mode"]) => {
+    if (mode === "onsite") return t.experience.modeOnsite;
+    if (mode === "remote") return t.experience.modeRemote;
+    return t.experience.modeHybrid;
+  };
+
   const years = useMemo(
-    () => jobs.map((j) => j.period.split("—")[0]?.trim() || j.period),
-    [jobs],
+    () =>
+      jobs.map((j) => {
+        const period = lx(locale, j.period);
+        return period.split("—")[0]?.trim() || period;
+      }),
+    [jobs, locale],
   );
 
   useHeroAtmosphere(canvasRef, true);
@@ -291,7 +298,8 @@ export default function ExperiencePage() {
     <div
       ref={rootRef}
       className="ex-root"
-      lang="fa"
+      lang={locale}
+      dir={dir}
       style={
         {
           "--ex-accent": KEXSIO_ACCENT,
@@ -311,8 +319,8 @@ export default function ExperiencePage() {
             var(--ex-bg);
           color: #e8fff8;
           font-family: "Vazirmatn", "Sora", system-ui, sans-serif;
-          direction: rtl;
-          text-align: right;
+          direction: inherit;
+          text-align: start;
           overflow-x: hidden;
         }
 
@@ -874,35 +882,33 @@ export default function ExperiencePage() {
         <canvas ref={canvasRef} className="ex-hero-canvas" aria-hidden="true" />
         <div className="ex-hero-veil" aria-hidden="true" />
         <div className="ex-hero-inner">
-          <p className="ex-kicker ex-hero-anim">مسیر حرفه‌ای · ۶+ سال</p>
+          <p className="ex-kicker ex-hero-anim">{t.experience.kicker}</p>
           <h1 className="ex-title ex-hero-anim">
-            جایی که
+            {t.experience.titleBefore}
             <br />
-            <em>کار کردم</em>
+            <em>{t.experience.titleEm}</em>
           </h1>
-          <p className="ex-lede ex-hero-anim">
-            از کارآموزی در Taftaco تا Senior حضوری در Sol، همکاری با OsloWeb نروژ و بنیان‌گذاری EasyCodePie.
-          </p>
+          <p className="ex-lede ex-hero-anim">{t.experience.lede}</p>
           <div className="ex-stats ex-hero-anim">
             <span className="ex-stat">
-              <b>{jobs.length}</b> ایستگاه
+              <b>{jobs.length}</b> {t.experience.stations}
             </span>
             <span className="ex-stat">
-              <b>Sol</b> · Senior · حضوری
+              <b>Sol</b> · Senior · {t.experience.modeOnsite}
             </span>
             <span className="ex-stat">
               <b>OsloWeb</b> · Norway
             </span>
           </div>
           <button type="button" className="ex-start ex-hero-anim" onClick={() => goTo(0)}>
-            شروع مسیر
+            {t.experience.start}
             <i aria-hidden="true" />
           </button>
         </div>
       </header>
 
-      <section className="ex-pin" ref={pinRef} aria-label="خط زمان سوابق کاری">
-        <aside className="ex-nav" aria-label="ایستگاه‌های مسیر">
+      <section className="ex-pin" ref={pinRef} aria-label={t.experience.timelineAria}>
+        <aside className="ex-nav" aria-label={t.experience.stationsAria}>
           <div className="ex-nav-track" aria-hidden="true">
             <div className="ex-nav-fill" ref={fillRef} />
           </div>
@@ -933,25 +939,27 @@ export default function ExperiencePage() {
               job.company
             )}
           </h2>
-          <p className="ex-stage-role">{job.role}</p>
+          <p className="ex-stage-role">{lx(locale, job.role)}</p>
           <div className="ex-chips">
-            <span className="ex-chip">{job.period}</span>
-            <span className="ex-chip">{job.location}</span>
-            <span className="ex-chip ex-chip-on">{MODE_LABEL[job.mode]}</span>
-            {job.current ? <span className="ex-chip ex-chip-on">فعلی</span> : null}
+            <span className="ex-chip">{lx(locale, job.period)}</span>
+            <span className="ex-chip">{lx(locale, job.location)}</span>
+            <span className="ex-chip ex-chip-on">{modeLabel(job.mode)}</span>
+            {job.current ? (
+              <span className="ex-chip ex-chip-on">{t.experience.current}</span>
+            ) : null}
           </div>
-          <p className="ex-quote">{job.highlight}</p>
-          <p className="ex-body">{job.summary}</p>
-          <ul className="ex-stack" aria-label="فناوری‌ها">
-            {job.stack.map((t) => (
-              <li key={t}>{t}</li>
+          <p className="ex-quote">{lx(locale, job.highlight)}</p>
+          <p className="ex-body">{lx(locale, job.summary)}</p>
+          <ul className="ex-stack" aria-label={t.experience.stackAria}>
+            {job.stack.map((tech) => (
+              <li key={tech}>{tech}</li>
             ))}
           </ul>
           <div className="ex-controls">
             <button
               type="button"
               className="ex-ctrl"
-              aria-label="قبلی"
+              aria-label={t.experience.prev}
               disabled={active <= 0}
               onClick={() => goTo(active - 1)}
             >
@@ -962,7 +970,7 @@ export default function ExperiencePage() {
             <button
               type="button"
               className="ex-ctrl"
-              aria-label="بعدی"
+              aria-label={t.experience.next}
               disabled={active >= jobs.length - 1}
               onClick={() => goTo(active + 1)}
             >
@@ -985,7 +993,7 @@ export default function ExperiencePage() {
             <div>
               <strong>{job.company}</strong>
               <span>
-                {MODE_LABEL[job.mode]} · {years[active]}
+                {modeLabel(job.mode)} · {years[active]}
               </span>
             </div>
             <div className="ex-meter">{Math.round(((active + 1) / jobs.length) * 100)}%</div>
@@ -1006,20 +1014,24 @@ export default function ExperiencePage() {
                 </h3>
                 <span className="ex-card-num">{pad(i)}</span>
               </div>
-              <p className="ex-stage-role">{j.role}</p>
+              <p className="ex-stage-role">{lx(locale, j.role)}</p>
               <figure className="ex-card-media">
-                <img src={j.image} alt={`${j.company} — ${j.role}`} loading="lazy" />
+                <img
+                  src={j.image}
+                  alt={`${j.company} — ${lx(locale, j.role)}`}
+                  loading="lazy"
+                />
               </figure>
               <div className="ex-chips">
-                <span className="ex-chip">{j.period}</span>
-                <span className="ex-chip">{j.location}</span>
-                <span className="ex-chip ex-chip-on">{MODE_LABEL[j.mode]}</span>
+                <span className="ex-chip">{lx(locale, j.period)}</span>
+                <span className="ex-chip">{lx(locale, j.location)}</span>
+                <span className="ex-chip ex-chip-on">{modeLabel(j.mode)}</span>
               </div>
-              <p className="ex-quote">{j.highlight}</p>
-              <p className="ex-body">{j.summary}</p>
+              <p className="ex-quote">{lx(locale, j.highlight)}</p>
+              <p className="ex-body">{lx(locale, j.summary)}</p>
               <ul className="ex-stack">
-                {j.stack.map((t) => (
-                  <li key={t}>{t}</li>
+                {j.stack.map((tech) => (
+                  <li key={tech}>{tech}</li>
                 ))}
               </ul>
             </article>
@@ -1032,16 +1044,14 @@ export default function ExperiencePage() {
           <figure className="ex-cta-art" aria-hidden="true">
             <img src="/experience-cta-mask.png?v=3" alt="" loading="lazy" decoding="async" />
           </figure>
-          <h2>ایستگاه بعدی: همکاری جدی</h2>
-          <p>
-            برای محصول فول‌استک، معماری دقیق و اجرای بین‌المللی — از ایده تا انتشار در تماسم.
-          </p>
+          <h2>{t.experience.ctaTitle}</h2>
+          <p>{t.experience.ctaBody}</p>
           <div className="ex-cta-row">
             <Link className="ex-btn ex-btn-primary" to="/contact">
-              شروع همکاری
+              {t.experience.ctaPrimary}
             </Link>
             <Link className="ex-btn ex-btn-ghost" to="/works">
-              نمونه‌کارها
+              {t.experience.ctaWorks}
             </Link>
           </div>
         </section>

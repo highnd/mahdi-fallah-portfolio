@@ -1,20 +1,11 @@
-import { FormEvent, useEffect, useId, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { KEXSIO_ACCENT, KEXSIO_BG, KEXSIO_TEAL } from "./worksData";
 import SiteNav from "./SiteNav";
-
-type FormStatus = "idle" | "loading" | "success" | "error";
+import { useLocale } from "./i18n/LocaleContext";
+import { PERSON } from "./seo/site";
 
 export default function ContactPage() {
-  const formId = useId();
-  const nameId = `${formId}-name`;
-  const emailId = `${formId}-email`;
-  const messageId = `${formId}-message`;
-
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
-  const [status, setStatus] = useState<FormStatus>("idle");
-  const [error, setError] = useState("");
+  const { locale, dir, t } = useLocale();
   const reducedRef = useRef(false);
   const marqueeRef = useRef<HTMLDivElement>(null);
 
@@ -56,36 +47,11 @@ export default function ContactPage() {
     return () => cancelAnimationFrame(raf);
   }, []);
 
-  const onSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-    setError("");
-    if (!name.trim() || !email.trim() || !message.trim()) {
-      setError("نام، ایمیل و توضیحات پروژه را کامل کنید.");
-      setStatus("error");
-      return;
-    }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
-      setError("یک ایمیل معتبر وارد کنید تا بتوانیم پاسخ دهیم.");
-      setStatus("error");
-      return;
-    }
-    setStatus("loading");
-    await new Promise((r) => setTimeout(r, 900));
-    setStatus("success");
-  };
-
-  const resetForm = () => {
-    setName("");
-    setEmail("");
-    setMessage("");
-    setStatus("idle");
-    setError("");
-  };
-
   return (
     <div
       className="ct-root"
-      lang="fa"
+      lang={locale}
+      dir={dir}
       style={
         {
           "--ct-accent": KEXSIO_ACCENT,
@@ -148,12 +114,11 @@ export default function ContactPage() {
         .ct-left {
           display: flex;
           flex-direction: column;
-          border-right: 1px solid rgba(232,255,248,0.1);
+          border-inline-end: 1px solid rgba(232,255,248,0.1);
           padding: 12px 36px 28px;
           min-width: 0;
           overflow: hidden;
-          direction: rtl;
-          text-align: right;
+          text-align: start;
           position: relative;
           isolation: isolate;
           background:
@@ -187,14 +152,12 @@ export default function ContactPage() {
         .ct-kicker {
           font-size: 12px;
           letter-spacing: 0.06em;
-          text-transform: none;
           color: var(--ct-accent);
           margin: 0 0 18px;
         }
         .ct-display {
           font-family: "Vazirmatn", "Sora", sans-serif;
           font-weight: 800;
-          text-transform: none;
           font-size: clamp(2.4rem, 6.5vw, 5.4rem);
           line-height: 1.05;
           letter-spacing: -0.02em;
@@ -206,41 +169,10 @@ export default function ContactPage() {
         }
         .ct-lede {
           margin-top: 1.5rem;
-          max-width: 38ch;
+          max-width: 40ch;
           font-size: clamp(0.95rem, 1.2vw, 1.1rem);
           line-height: 1.65;
           color: #c5ddd4;
-          margin-right: 0;
-          margin-left: auto;
-        }
-
-        .ct-meta {
-          display: grid;
-          grid-template-columns: repeat(3, minmax(0, 1fr));
-          gap: 18px;
-          margin-top: 1.75rem;
-          padding: 1.1rem 0 0;
-          border-top: 1px solid rgba(232,255,248,0.14);
-          flex-shrink: 0;
-        }
-        .ct-meta-label {
-          font-size: 11px;
-          letter-spacing: 0.04em;
-          text-transform: none;
-          color: #7a968e;
-          margin: 0 0 6px;
-        }
-        .ct-meta a, .ct-meta p {
-          margin: 0;
-          color: #e8fff8;
-          text-decoration: none;
-          font-size: 0.9rem;
-          word-break: break-word;
-        }
-        .ct-meta a:hover { color: var(--ct-accent); }
-        .ct-meta a:focus-visible {
-          outline: 2px solid var(--ct-accent);
-          outline-offset: 3px;
         }
 
         .ct-marquee-wrap {
@@ -256,7 +188,6 @@ export default function ContactPage() {
         .ct-marquee {
           display: flex;
           width: max-content;
-          gap: 0;
           will-change: transform;
           white-space: nowrap;
           font-family: "Sora", sans-serif;
@@ -275,8 +206,7 @@ export default function ContactPage() {
           padding: 40px clamp(20px, 4vw, 48px);
           min-width: 0;
           overflow-y: auto;
-          direction: rtl;
-          text-align: right;
+          text-align: start;
           -webkit-overflow-scrolling: touch;
         }
 
@@ -287,7 +217,6 @@ export default function ContactPage() {
         .ct-panel-title {
           font-family: "Vazirmatn", "Sora", sans-serif;
           font-weight: 800;
-          text-transform: none;
           font-size: clamp(1.35rem, 2.4vw, 1.85rem);
           letter-spacing: -0.01em;
           margin: 0 0 8px;
@@ -299,167 +228,49 @@ export default function ContactPage() {
           line-height: 1.6;
         }
 
-        .ct-form {
+        .ct-cards {
           display: flex;
           flex-direction: column;
-          gap: 18px;
-        }
-        .ct-field {
-          display: flex;
-          flex-direction: column;
-          gap: 8px;
-        }
-        .ct-field label {
-          font-size: 12px;
-          letter-spacing: 0.02em;
-          text-transform: none;
-          color: #7a968e;
-        }
-        .ct-field input,
-        .ct-field select,
-        .ct-field textarea {
-          width: 100%;
-          box-sizing: border-box;
-          background: rgba(23,23,23,0.55);
-          border: 1px solid rgba(232,255,248,0.14);
-          border-radius: 0;
-          color: #e8fff8;
-          font: inherit;
-          font-size: 1rem;
-          padding: 14px 14px;
-          outline: none;
-          transition: border-color 0.2s ease, background 0.2s ease;
-          direction: rtl;
-          text-align: right;
-        }
-        .ct-field input:hover,
-        .ct-field select:hover,
-        .ct-field textarea:hover {
-          border-color: rgba(33,241,168,0.35);
-        }
-        .ct-field input:focus,
-        .ct-field select:focus,
-        .ct-field textarea:focus {
-          border-color: var(--ct-accent);
-          background: rgba(0,71,65,0.25);
-        }
-        .ct-field textarea {
-          min-height: 120px;
-          resize: vertical;
-        }
-        .ct-field select {
-          cursor: pointer;
-          appearance: none;
-          background-image: linear-gradient(45deg, transparent 50%, var(--ct-accent) 50%),
-            linear-gradient(135deg, var(--ct-accent) 50%, transparent 50%);
-          background-position: 18px calc(50% - 3px), 12px calc(50% - 3px);
-          background-size: 6px 6px, 6px 6px;
-          background-repeat: no-repeat;
-          padding-left: 36px;
-        }
-
-        .ct-row {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 14px;
-        }
-
-        .ct-submit {
-          margin-top: 6px;
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
           gap: 12px;
-          min-height: 52px;
-          padding: 0 22px;
-          border: none;
-          background: var(--ct-accent);
-          color: #0a1412;
-          font-family: "Vazirmatn", "Sora", sans-serif;
-          font-weight: 700;
-          font-size: 14px;
-          letter-spacing: 0.02em;
-          text-transform: none;
-          cursor: pointer;
-          transition: transform 0.2s ease, background 0.2s ease, opacity 0.2s ease;
-          width: 100%;
         }
-        .ct-submit:hover:not(:disabled) {
-          background: #6ff7c4;
+        .ct-card {
+          display: block;
+          padding: 18px 20px;
+          border: 1px solid rgba(232,255,248,0.14);
+          background: rgba(23,23,23,0.45);
+          text-decoration: none;
+          color: inherit;
+          transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+        }
+        .ct-card:hover {
+          border-color: rgba(33,241,168,0.45);
+          background: rgba(0,71,65,0.28);
           transform: translateY(-1px);
         }
-        .ct-submit:active:not(:disabled) {
-          transform: translateY(0) scale(0.98);
-        }
-        .ct-submit:disabled {
-          opacity: 0.55;
-          cursor: not-allowed;
-        }
-        .ct-submit:focus-visible {
-          outline: 2px solid #e8fff8;
+        .ct-card:focus-visible {
+          outline: 2px solid var(--ct-accent);
           outline-offset: 3px;
         }
-        .ct-submit svg { width: 16px; height: 16px; }
-
-        .ct-feedback {
-          min-height: 1.25rem;
+        .ct-card-label {
+          margin: 0 0 6px;
+          font-size: 11px;
+          letter-spacing: 0.04em;
+          color: #7a968e;
+        }
+        .ct-card-value {
           margin: 0;
-          font-size: 0.85rem;
-          color: #ff8f8f;
-        }
-        .ct-feedback[data-ok="true"] { color: var(--ct-accent); }
-
-        .ct-success {
-          border: 1px solid rgba(33,241,168,0.35);
-          background: rgba(0,71,65,0.35);
-          padding: 28px 24px;
-        }
-        .ct-success h2 {
-          font-family: "Vazirmatn", "Sora", sans-serif;
-          font-weight: 800;
-          text-transform: none;
-          font-size: 1.5rem;
-          margin: 0 0 10px;
-        }
-        .ct-success p {
-          margin: 0 0 22px;
-          color: #9fbab2;
-          line-height: 1.65;
-        }
-        .ct-ghost {
-          background: transparent;
-          border: 1px solid rgba(232,255,248,0.25);
+          font-size: 1.05rem;
+          font-weight: 600;
           color: #e8fff8;
-          min-height: 48px;
-          padding: 0 18px;
-          font-family: "Vazirmatn", "Sora", sans-serif;
-          font-weight: 700;
-          font-size: 13px;
-          letter-spacing: 0.02em;
-          text-transform: none;
-          cursor: pointer;
-          transition: border-color 0.2s ease, color 0.2s ease;
-          width: 100%;
+          word-break: break-word;
         }
-        .ct-ghost:hover {
-          border-color: var(--ct-accent);
+        .ct-card:hover .ct-card-value {
           color: var(--ct-accent);
         }
 
-        .ct-spin {
-          width: 16px;
-          height: 16px;
-          border: 2px solid rgba(10,20,18,0.25);
-          border-top-color: #0a1412;
-          border-radius: 50%;
-          animation: ct-spin 0.7s linear infinite;
-        }
-        @keyframes ct-spin { to { transform: rotate(360deg); } }
-
         @media (prefers-reduced-motion: reduce) {
           .ct-marquee { transform: none !important; }
-          .ct-spin { animation: none; border-top-color: transparent; }
-          .ct-submit, .ct-ghost { transition: none; }
+          .ct-card { transition: none; }
         }
 
         @media (max-width: 920px) {
@@ -476,34 +287,20 @@ export default function ContactPage() {
             padding-top: 64px;
           }
           .ct-left {
-            border-right: none;
+            border-inline-end: none;
             border-bottom: 1px solid rgba(232,255,248,0.1);
             padding: 8px 18px 0;
             overflow: visible;
           }
           .ct-hero { padding: 24px 0 18px; }
           .ct-display { font-size: clamp(2.1rem, 11vw, 3.2rem); line-height: 1.08; }
-          .ct-lede { max-width: 100%; margin-left: 0; }
-          .ct-meta { grid-template-columns: 1fr; gap: 14px; }
+          .ct-lede { max-width: 100%; }
           .ct-marquee-wrap { margin: 16px -18px 0; }
           .ct-right {
             padding: 24px 18px calc(28px + env(safe-area-inset-bottom, 0px));
             justify-content: flex-start;
           }
           .ct-panel { width: 100%; }
-          .ct-row { grid-template-columns: 1fr; }
-          .ct-panel-sub { margin-bottom: 22px; }
-        }
-
-        @media (max-width: 480px) {
-          .ct-left { padding: 4px 14px 0; }
-          .ct-right { padding: 20px 14px calc(24px + env(safe-area-inset-bottom, 0px)); }
-          .ct-marquee-wrap { margin: 14px -14px 0; }
-          .ct-display { font-size: clamp(1.9rem, 12vw, 2.6rem); }
-          .ct-kicker { font-size: 11px; }
-          .ct-field input,
-          .ct-field select,
-          .ct-field textarea { font-size: 16px; } /* avoid iOS zoom */
         }
       `}</style>
 
@@ -514,34 +311,15 @@ export default function ContactPage() {
       <div className="ct-layout">
         <aside className="ct-left">
           <div className="ct-hero">
-            <p className="ct-kicker">آماده همکاری · ۲۰۲۶</p>
+            <p className="ct-kicker">{t.contact.kicker}</p>
             <h1 className="ct-display">
-              شروع
+              {t.contact.titleLine1}
               <br />
-              یک همکاری
+              {t.contact.titleLine2}
               <br />
-              <span className="ct-outline">جدی</span>
+              <span className="ct-outline">{t.contact.titleOutline}</span>
             </h1>
-            <p className="ct-lede">
-              از ایده تا محصول — فول‌استک، معماری بک‌اند و رابط‌های غوطه‌ور با اجرای دقیق.
-            </p>
-
-            <div className="ct-meta">
-              <div>
-                <p className="ct-meta-label">ایمیل</p>
-                <a href="mailto:highnd32@gmail.com" dir="ltr">highnd32@gmail.com</a>
-              </div>
-              <div>
-                <p className="ct-meta-label">تلفن</p>
-                <a href="tel:+989924021299" dir="ltr">0992 402 1299</a>
-              </div>
-              <div>
-                <p className="ct-meta-label">گیت‌هاب</p>
-                <a href="https://github.com/highnd" target="_blank" rel="noreferrer" dir="ltr">
-                  github.com/highnd
-                </a>
-              </div>
-            </div>
+            <p className="ct-lede">{t.contact.lede}</p>
           </div>
 
           <div className="ct-marquee-wrap" aria-hidden="true">
@@ -566,93 +344,33 @@ export default function ContactPage() {
 
         <main className="ct-right" id="main">
           <div className="ct-panel">
-            {status === "success" ? (
-              <div className="ct-success" role="status" aria-live="polite">
-                <h2>پیام دریافت شد</h2>
-                <p>
-                  ممنون{name.trim() ? ` ${name.trim()}` : ""} — پیام شما خوانده می‌شود و به‌زودی
-                  به {email.trim() || "ایمیلتان"} پاسخ داده خواهد شد.
+            <h2 className="ct-panel-title">{t.contact.panelTitle}</h2>
+            <p className="ct-panel-sub">{t.contact.panelSub}</p>
+            <div className="ct-cards">
+              <a className="ct-card" href={`mailto:${PERSON.email}`}>
+                <p className="ct-card-label">{t.contact.email}</p>
+                <p className="ct-card-value" dir="ltr">
+                  {PERSON.email}
                 </p>
-                <button type="button" className="ct-ghost" onClick={resetForm}>
-                  ارسال پیام دیگر
-                </button>
-              </div>
-            ) : (
-              <>
-                <h2 className="ct-panel-title">درخواست پروژه</h2>
-                <p className="ct-panel-sub">
-                  چند جزئیات کافی است. معمولاً ظرف چند روز پاسخ می‌دهیم.
+              </a>
+              <a className="ct-card" href={`tel:${PERSON.telephone}`}>
+                <p className="ct-card-label">{t.contact.phone}</p>
+                <p className="ct-card-value" dir="ltr">
+                  {PERSON.telephoneDisplay}
                 </p>
-                <form className="ct-form" onSubmit={onSubmit} noValidate>
-                  <div className="ct-row">
-                    <div className="ct-field">
-                      <label htmlFor={nameId}>نام</label>
-                      <input
-                        id={nameId}
-                        name="name"
-                        autoComplete="name"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        required
-                      />
-                    </div>
-                    <div className="ct-field">
-                      <label htmlFor={emailId}>ایمیل</label>
-                      <input
-                        id={emailId}
-                        name="email"
-                        type="email"
-                        autoComplete="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                        dir="ltr"
-                        style={{ textAlign: "left" }}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="ct-field">
-                    <label htmlFor={messageId}>درباره پروژه‌تان بگویید</label>
-                    <textarea
-                      id={messageId}
-                      name="message"
-                      value={message}
-                      onChange={(e) => setMessage(e.target.value)}
-                      required
-                    />
-                  </div>
-
-                  <p
-                    className="ct-feedback"
-                    role={status === "error" ? "alert" : undefined}
-                  >
-                    {status === "error" ? error : ""}
-                  </p>
-
-                  <button
-                    type="submit"
-                    className="ct-submit"
-                    disabled={status === "loading"}
-                    aria-busy={status === "loading"}
-                  >
-                    {status === "loading" ? (
-                      <>
-                        <span className="ct-spin" aria-hidden="true" />
-                        در حال ارسال
-                      </>
-                    ) : (
-                      <>
-                        ارسال پیام
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true" style={{ transform: "scaleX(-1)" }}>
-                          <path d="M7 17L17 7M17 7H9M17 7v8" />
-                        </svg>
-                      </>
-                    )}
-                  </button>
-                </form>
-              </>
-            )}
+              </a>
+              <a
+                className="ct-card"
+                href={PERSON.github}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <p className="ct-card-label">{t.contact.github}</p>
+                <p className="ct-card-value" dir="ltr">
+                  github.com/{PERSON.githubHandle}
+                </p>
+              </a>
+            </div>
           </div>
         </main>
       </div>

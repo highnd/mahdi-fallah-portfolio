@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import SiteNav from "./SiteNav";
+import { useLocale } from "./i18n/LocaleContext";
 
 /* ────────────────────────────────────────────────────────────────────────
    NEBULA — a full-page 3D particle agency website.
@@ -1011,6 +1012,8 @@ function buildOrbits(n: number, P: Float32Array, C: Float32Array) {
 export default function NebulaAgency() {
   const rootRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
+  const { locale, dir, t } = useLocale();
+  const h = t.home;
 
   // Hash nav (#expertise / #contact) must drive scroll-progress stations —
   // native fragment scrolling fights the fixed stage and shoves the navbar off-screen.
@@ -1603,7 +1606,7 @@ export default function NebulaAgency() {
         .neb-hero { align-items: center; justify-content: flex-start; }
         .neb-hero-copy {
           max-width: min(48ch, 100%); width: 100%;
-          direction: rtl; text-align: right;
+          direction: inherit; text-align: start;
           box-sizing: border-box;
           padding: 2rem 2.15rem;
           border-radius: 1.25rem;
@@ -1633,7 +1636,7 @@ export default function NebulaAgency() {
         }
 
         /* 1 — statement */
-        .neb-statement { align-items: center; justify-content: center; text-align: center; direction: rtl; }
+        .neb-statement { align-items: center; justify-content: center; text-align: center; direction: inherit; }
         .neb-statement-text {
           font-family: "Vazirmatn", "Sora", sans-serif; font-weight: 700; text-transform: none;
           font-size: clamp(1.35rem, 3.4vw, 3rem); line-height: 1.2; letter-spacing: -0.01em;
@@ -1762,7 +1765,7 @@ export default function NebulaAgency() {
         .neb-left { align-items: center; justify-content: flex-start; }
         .neb-side-copy {
           max-width: min(36ch, 100%); width: 100%;
-          direction: rtl; text-align: right;
+          direction: inherit; text-align: start;
           box-sizing: border-box;
           padding: 1.85rem 1.9rem;
           border-radius: 1.25rem;
@@ -1772,7 +1775,7 @@ export default function NebulaAgency() {
             radial-gradient(130% 120% at 50% 45%, rgba(8,10,10,0.96) 0%, rgba(12,14,14,0.78) 48%, rgba(12,14,14,0.28) 72%, transparent 88%);
           text-shadow: 0 2px 18px rgba(0,0,0,0.7);
         }
-        .neb-right .neb-side-copy { text-align: right; }
+        .neb-right .neb-side-copy { text-align: start; }
         .neb-h2 {
           font-family: "Vazirmatn", "Sora", sans-serif; font-weight: 800; text-transform: none;
           font-size: clamp(1.8rem, 5vw, 3.6rem); margin: 0; letter-spacing: -0.02em; line-height: 1.15;
@@ -1803,7 +1806,7 @@ export default function NebulaAgency() {
           font-family: "Vazirmatn", "Sora", sans-serif; font-weight: 800; text-transform: none;
           font-size: clamp(1.7rem, 5vw, 3.4rem); margin: 0 0 1.25rem; letter-spacing: -0.02em;
           line-height: 1.15; max-width: 100%; overflow-wrap: anywhere;
-          direction: rtl; text-align: right;
+          direction: inherit; text-align: start;
           box-sizing: border-box;
           padding: 1.15rem 1.45rem;
           border-radius: 1rem;
@@ -1823,7 +1826,7 @@ export default function NebulaAgency() {
             radial-gradient(100% 130% at 50% 40%, rgba(10,12,12,0.92) 0%, rgba(17,17,17,0.78) 48%, rgba(17,17,17,0.3) 72%, transparent 88%);
         }
         .neb-col {
-          direction: rtl; text-align: right; min-width: 0;
+          direction: inherit; text-align: start; min-width: 0;
         }
         .neb-col h4 {
           font-family: "Vazirmatn", "Sora", sans-serif; font-weight: 700; text-transform: none;
@@ -1870,7 +1873,7 @@ export default function NebulaAgency() {
           font-family: "Vazirmatn", "Sora", sans-serif; font-weight: 800; text-transform: none;
           font-size: clamp(1.4rem, 5vw, 3.8rem); letter-spacing: -0.02em; color: #fff;
           text-decoration: none; pointer-events: auto; word-break: normal; text-align: center;
-          direction: rtl; max-width: min(18ch, 92vw); line-height: 1.2;
+          direction: inherit; max-width: min(22ch, 92vw); line-height: 1.2;
           padding: 0.9rem 1.3rem;
           border-radius: 1.25rem;
           background:
@@ -1987,61 +1990,69 @@ export default function NebulaAgency() {
         }
       `}</style>
 
-      <div ref={stageRef} className="neb-stage" lang="fa">
+      <div ref={stageRef} className="neb-stage" lang={locale} dir={dir}>
         <SiteNav />
 
         {/* 0 — hero */}
         <section className="neb-sec neb-hero" style={{ opacity: 0 }}>
           <div className="neb-hero-copy">
             <h1 className="neb-display">
-              <span className="neb-display-line">مهدی فلاح</span>
-              <span className="neb-display-line neb-outline">مهندس نرم‌افزار</span>
+              <span className="neb-display-line">{h.name}</span>
+              <span className="neb-display-line neb-outline">{h.role}</span>
             </h1>
-            <p className="neb-lead">
-              شش سال طراحی و توسعه محصول — از تجربه کاربری تا معماری بک‌اند
-            </p>
+            <p className="neb-lead">{h.lead}</p>
           </div>
         </section>
 
         {/* 1 — PhD */}
         <section className="neb-sec neb-right" style={{ opacity: 0 }}>
           <div className="neb-side-copy">
-            <h2 className="neb-h2 neb-h2-wrap">دکتری<br />مهندسی کامپیوتر</h2>
-            <p className="neb-para">
-              دکتری مهندسی کامپیوتر — پژوهش، مقاله و نگاه سیستمی به مسئله
-            </p>
+            <h2 className="neb-h2 neb-h2-wrap">
+              {h.phdTitle.split("\n").map((line, i) => (
+                <span key={i}>
+                  {i > 0 ? <br /> : null}
+                  {line}
+                </span>
+              ))}
+            </h2>
+            <p className="neb-para">{h.phdBody}</p>
           </div>
         </section>
 
         {/* 2 — manifesto */}
         <section className="neb-sec neb-statement" style={{ opacity: 0 }}>
           <h2 className="neb-statement-text">
-            جایی که خلاقیت محصول
+            {h.manifestoLine1}
             <br />
-            با دقت <span className="neb-outline">مهندسی</span> یکی می‌شود
+            {h.manifestoBeforeOutline}{" "}
+            <span className="neb-outline">{h.manifestoOutline}</span>
+            {h.manifestoAfterOutline ? ` ${h.manifestoAfterOutline}` : ""}
           </h2>
         </section>
 
         {/* 3 — full-stack */}
         <section className="neb-sec neb-right" style={{ opacity: 0 }}>
           <div className="neb-side-copy">
-            <h2 className="neb-h2">فول‌استک</h2>
-            <p className="neb-para">
-              از رابط کاربری تا سرویس و داده — یک مسیر یکپارچه تا انتشار
-            </p>
+            <h2 className="neb-h2">{h.fullstackTitle}</h2>
+            <p className="neb-para">{h.fullstackBody}</p>
           </div>
         </section>
 
         {/* 4 — system design */}
         <section className="neb-sec neb-left" style={{ opacity: 0 }}>
           <div className="neb-side-copy">
-            <h2 className="neb-h2 neb-h2-wrap">طراحی<br />سیستم</h2>
-            <p className="neb-para">
-              معماری مقیاس‌پذیر با مرزهای مشخص، تصمیم‌های آگاهانه و مسیر رشد
-            </p>
+            <h2 className="neb-h2 neb-h2-wrap">
+              {h.systemTitle.split("\n").map((line, i) => (
+                <span key={i}>
+                  {i > 0 ? <br /> : null}
+                  {line}
+                </span>
+              ))}
+            </h2>
+            <p className="neb-para">{h.systemBody}</p>
             <ul className="neb-benefit-list">
-              <li>تفکیک دامنه و قرارداد سرویس‌ها</li>
-              <li>مقیاس‌پذیری، کش و تحمل خطا</li>
+              <li>{h.systemLi1}</li>
+              <li>{h.systemLi2}</li>
             </ul>
           </div>
         </section>
@@ -2049,47 +2060,45 @@ export default function NebulaAgency() {
         {/* 5 — process */}
         <section className="neb-sec neb-right" style={{ opacity: 0 }}>
           <div className="neb-side-copy">
-            <h2 className="neb-h2">فرآیند</h2>
-            <p className="neb-para">
-              از ایده تا انتشار — چرخه کوتاه، معماری پایدار، نگهداری آسان
-            </p>
+            <h2 className="neb-h2">{h.processTitle}</h2>
+            <p className="neb-para">{h.processBody}</p>
           </div>
         </section>
 
         {/* 6 — expertise */}
         <section id="expertise" className="neb-sec neb-expertise" style={{ opacity: 0 }}>
-          <h2 className="neb-expertise-title">حوزه‌های تخصصی</h2>
+          <h2 className="neb-expertise-title">{h.expertiseTitle}</h2>
           <div className="neb-cols">
             <div className="neb-col">
-              <h4>فرانت‌اند</h4>
+              <h4>{h.colFrontend}</h4>
               <ul>
-                <li>React و TypeScript</li>
-                <li>موشن و تعامل</li>
-                <li>سیستم طراحی</li>
+                <li>{h.fe1}</li>
+                <li>{h.fe2}</li>
+                <li>{h.fe3}</li>
               </ul>
             </div>
             <div className="neb-col">
-              <h4>بک‌اند</h4>
+              <h4>{h.colBackend}</h4>
               <ul>
-                <li>Node و API</li>
-                <li>معماری سرویس</li>
-                <li>دیتابیس و احراز هویت</li>
+                <li>{h.be1}</li>
+                <li>{h.be2}</li>
+                <li>{h.be3}</li>
               </ul>
             </div>
             <div className="neb-col">
-              <h4>تجربه تعاملی</h4>
+              <h4>{h.colInteractive}</h4>
               <ul>
-                <li>WebGL / Three.js</li>
-                <li>وب غوطه‌ور</li>
-                <li>روایت بصری</li>
+                <li>{h.ix1}</li>
+                <li>{h.ix2}</li>
+                <li>{h.ix3}</li>
               </ul>
             </div>
             <div className="neb-col">
-              <h4>اجرای محصول</h4>
+              <h4>{h.colProduct}</h4>
               <ul>
-                <li>تفکر محصولی</li>
-                <li>بهینه‌سازی عملکرد</li>
-                <li>انتشار و تکرار</li>
+                <li>{h.pr1}</li>
+                <li>{h.pr2}</li>
+                <li>{h.pr3}</li>
               </ul>
             </div>
           </div>
@@ -2097,28 +2106,30 @@ export default function NebulaAgency() {
 
         {/* 7 — about / craft */}
         <section className="neb-sec neb-team" style={{ opacity: 0 }}>
-          <h2 className="neb-team-title">اصول کار من</h2>
+          <h2 className="neb-team-title">{h.principlesTitle}</h2>
           <div className="neb-team-row">
-            <span className="neb-name">کیفیت</span>
-            <span className="neb-name neb-outline">دقت</span>
-            <span className="neb-name">معماری</span>
+            <span className="neb-name">{h.pQuality}</span>
+            <span className="neb-name neb-outline">{h.pPrecision}</span>
+            <span className="neb-name">{h.pArchitecture}</span>
             <span className="neb-name-break" aria-hidden="true" />
-            <span className="neb-name neb-outline">پویایی</span>
-            <span className="neb-name">وضوح</span>
+            <span className="neb-name neb-outline">{h.pMotion}</span>
+            <span className="neb-name">{h.pClarity}</span>
           </div>
         </section>
 
         {/* 8 — contact */}
         <section id="contact" className="neb-sec neb-contact" style={{ opacity: 0 }}>
           <a className="neb-email" href="/contact">
-            برای همکاری در تماس باشید
+            {h.ctaEmail}
           </a>
           <div className="neb-footer">
             <div className="neb-divider" />
             <div className="neb-foot-links">
-              <a href="/contact">ثبت درخواست</a>
-              <a href="/works">نمونه‌کارها</a>
-              <a href="https://github.com/highnd" target="_blank" rel="noreferrer">گیت‌هاب</a>
+              <a href="/contact">{h.ctaContact}</a>
+              <a href="/works">{h.ctaWorks}</a>
+              <a href="https://github.com/highnd" target="_blank" rel="noreferrer">
+                {h.ctaGithub}
+              </a>
             </div>
           </div>
         </section>
@@ -2128,7 +2139,7 @@ export default function NebulaAgency() {
             <div className="neb-dot" key={i} />
           ))}
         </div>
-        <div className="neb-hint">اسکرول کنید</div>
+        <div className="neb-hint">{h.scrollHint}</div>
       </div>
 
       <div className="neb-spacer" />
